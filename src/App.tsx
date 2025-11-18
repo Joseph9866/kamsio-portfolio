@@ -1,14 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Mail } from 'lucide-react';
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
   const [mediaErrors, setMediaErrors] = useState<Record<number, boolean>>({});
   const [expandedProjects, setExpandedProjects] = useState<Record<number, boolean>>({});
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const projects: Array<{
     id: number;
@@ -91,124 +87,7 @@ function App() {
     }
   };
 
-  // Load profile image from localStorage on mount
-  useEffect(() => {
-    const storedImage = localStorage.getItem('portfolio_profile_image');
-    if (storedImage) {
-      setProfileImage(storedImage);
-    }
-  }, []);
 
-  // Handle profile circle click to trigger file input
-  const handleProfileClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  // Compress image before storing
-  const compressImage = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          // Create canvas for compression
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          
-          if (!ctx) {
-            reject(new Error('Failed to get canvas context'));
-            return;
-          }
-
-          // Calculate new dimensions (max 800x800 while maintaining aspect ratio)
-          const maxSize = 800;
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > maxSize) {
-              height = (height * maxSize) / width;
-              width = maxSize;
-            }
-          } else {
-            if (height > maxSize) {
-              width = (width * maxSize) / height;
-              height = maxSize;
-            }
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-
-          // Draw and compress image
-          ctx.drawImage(img, 0, 0, width, height);
-          
-          // Convert to base64 with compression (0.85 quality for JPEG)
-          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.85);
-          resolve(compressedBase64);
-        };
-
-        img.onerror = () => {
-          reject(new Error('Failed to load image'));
-        };
-
-        img.src = e.target?.result as string;
-      };
-
-      reader.onerror = () => {
-        reject(new Error('Failed to read file'));
-      };
-
-      reader.readAsDataURL(file);
-    });
-  };
-
-  // Handle file selection and validation
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Reset error state and show loading
-    setUploadError(null);
-    setIsUploading(true);
-
-    // Validate file type
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-    if (!validTypes.includes(file.type)) {
-      setUploadError('Please select a valid image file (JPG, PNG, WebP, or GIF)');
-      setIsUploading(false);
-      return;
-    }
-
-    // Validate file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-    if (file.size > maxSize) {
-      setUploadError('Image size must be less than 5MB. Please compress your image and try again.');
-      setIsUploading(false);
-      return;
-    }
-
-    try {
-      // Compress image before storing
-      const compressedImage = await compressImage(file);
-      
-      // Store in localStorage
-      localStorage.setItem('portfolio_profile_image', compressedImage);
-      setProfileImage(compressedImage);
-      setIsUploading(false);
-    } catch (error) {
-      // Handle storage quota exceeded
-      if (error instanceof DOMException && error.name === 'QuotaExceededError') {
-        setUploadError('Storage quota exceeded. Please try a smaller image or clear browser storage.');
-      } else if (error instanceof Error) {
-        setUploadError(error.message || 'Failed to process image. Please try again.');
-      } else {
-        setUploadError('Failed to save image. Please try again.');
-      }
-      setIsUploading(false);
-    }
-  };
 
   // Handle media loading errors
   const handleMediaError = (projectId: number) => {
@@ -259,63 +138,16 @@ function App() {
           <div className="flex justify-center flex-col items-center">
             <div className="relative w-80 h-80 sm:w-96 sm:h-96 lg:w-[28rem] lg:h-[28rem]">
               <div className="absolute inset-0 border-8 border-yellow-500 rounded-full"></div>
-              <div 
-                className={`absolute inset-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity duration-300 group ${isUploading ? 'opacity-50 cursor-wait' : ''}`}
-                onClick={!isUploading ? handleProfileClick : undefined}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (!isUploading && (e.key === 'Enter' || e.key === ' ')) {
-                    e.preventDefault();
-                    handleProfileClick();
-                  }
-                }}
-                aria-label="Click to upload profile image"
-                aria-busy={isUploading}
-              >
-                <div className="w-full h-full bg-gradient-to-b from-amber-900 via-amber-800 to-gray-900 rounded-full flex items-center justify-center text-4xl overflow-hidden relative">
-                  {profileImage ? (
-                    <img 
-                      src={profileImage} 
-                      alt="Profile" 
-                      className="w-full h-full object-contain"
-                    />
-                  ) : (
-                    <span>👨</span>
-                  )}
-                  {isUploading ? (
-                    <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-                      <div className="flex flex-col items-center gap-2">
-                        <div className="w-8 h-8 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
-                        <span className="text-white text-sm">Uploading...</span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                      <span className="text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        Click to upload
-                      </span>
-                    </div>
-                  )}
+              <div className="absolute inset-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
+                <div className="w-full h-full bg-gradient-to-b from-amber-900 via-amber-800 to-gray-900 rounded-full flex items-center justify-center overflow-hidden">
+                  <img 
+                    src="/images/profile.jpeg" 
+                    alt="Kamsiyochukwu Desiree Obi - Graphic Designer & Creative Developer" 
+                    className="w-full h-full object-contain"
+                  />
                 </div>
               </div>
             </div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
-              onChange={handleFileChange}
-              className="hidden"
-              aria-label="Upload profile image"
-              disabled={isUploading}
-            />
-            {uploadError && (
-              <div className="mt-4 p-3 bg-red-900 bg-opacity-50 border border-red-500 rounded-lg max-w-xs">
-                <p className="text-red-300 text-sm text-center">
-                  {uploadError}
-                </p>
-              </div>
-            )}
           </div>
         </div>
       </section>
