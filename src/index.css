@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Animated gradient background for hero section */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-gradient-bg {
+  background: linear-gradient(
+    -45deg,
+    #1f2937,
+    #374151,
+    #4b5563,
+    #1f2937,
+    #111827
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+/* Respect user's motion preferences for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .animated-gradient-bg {
+    animation: none;
+    background: #1f2937;
+  }
+  
+  /* Disable all transitions and animations for reduced motion */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Enhanced focus styles for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid #eab308;
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid #eab308;
+  outline-offset: 2px;
+}
+
+/* Improve image loading performance */
+img {
+  content-visibility: auto;
+}
+
+/* Optimize video performance */
+video {
+  content-visibility: auto;
+}
