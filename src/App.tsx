@@ -117,7 +117,7 @@ function App() {
             <div className="bg-yellow-500 rounded-full p-2">
               <div className="w-6 h-6 bg-gray-900 rounded-full" />
             </div>
-            <span className="font-bold text-lg">RTFOLIO | Editor</span>
+            <span className="font-bold text-lg">PORTFOLIO | Editor</span>
           </div>
         </div>
       </header>
