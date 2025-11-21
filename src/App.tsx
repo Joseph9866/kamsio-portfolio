@@ -1,16 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Mail } from 'lucide-react';
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [mediaErrors, setMediaErrors] = useState<Record<number, boolean>>({});
   const [expandedProjects, setExpandedProjects] = useState<Record<number, boolean>>({});
+  const [projectImageIndex, setProjectImageIndex] = useState<Record<number, number>>({});
 
   const projects: Array<{
     id: number;
     title: string;
     description: string;
-    mediaUrl: string;
+    mediaUrl: string | string[];
     mediaType: 'image' | 'video';
     link?: string;
   }> = [
@@ -27,45 +28,41 @@ function App() {
       title: 'PAC-MAN Retro Arcade Interface', 
       description: 'This project is a self-directed build where I recreated a PAC-MAN–inspired retro web interface using hand-coded HTML and CSS. The goal was to challenge myself to design a fully themed, multi-section website while maintaining strict visual fidelity to early arcade UI systems. No external libraries, page builders, or frameworks were used — everything is built from scratch. I implemented information architecture with logical sections (Header/Navigation, Landing Screen, High Scores Module, Gameplay Instructions, Character Index, Footer), recreated the arcade aesthetic through custom pixel-based typography, controlled color indexing, strict box-model usage, and CSS positioning. I curated and prepared each asset manually including cleaned and resized PNG sprites (Blinky, Pinky, Inky, Clyde), isolated Pac-Man movement frames, and applied responsive constraints. The final outcome demonstrates my ability to build structured pages using pure HTML/CSS, translate thematic design into functional UI components, work with custom assets and pixel-art rendering, and combine visual design principles with clean, modular code thinking.',
       mediaUrl: '/images/pac-man.mp4',
-      mediaType: 'video' as const
+      mediaType: 'video' as const,
+      link: 'https://joseph9866.github.io/pac-man/'
     },
     { 
       id: 3, 
       title: 'OZIO Authentic Sushi Restaurant', 
       description: 'A wide restaurant homepage layout centered on Japanese cuisine. The top shows a bold brand name, "OZIO AUTHENTIC SUSHI," with a navigation row offering menu, specials, locations, and contact. The hero area is a full-width banner featuring close-up sushi visuals with heavy garnish, paired with a heading promoting Japanese fusion cuisine and a subheading describing authentic, traditional dishes. A call-out button invites visitors to view seasonal specialties. Beneath the banner sits a three-column section. Each column displays a food category with a large image above its label. The left block shows a bowl of seasonal soup, the center displays sushi pieces being picked up with chopsticks, and the right features a bowl of udon noodles. The layout uses strong imagery, bold typography, and clean spacing to highlight featured dishes.',
       mediaUrl: '/images/Screenshot 2025-11-17 173525.png',
-      mediaType: 'image' as const
+      mediaType: 'image' as const,
+      link: 'https://joseph9866.github.io/ozi-sushi/#'
     },
     { 
       id: 4, 
       title: 'Animated Logo Design', 
       description: 'A dynamic logo animation project showcasing motion design skills and brand identity development. This project demonstrates the ability to bring static brand elements to life through smooth transitions, timing, and visual effects, creating an engaging and memorable brand experience.',
-      mediaUrl: '/images/hipcamp.png',
-      mediaType: 'image' as const
+      mediaUrl: '/images/LOGO ANIMATION.mp4',
+      mediaType: 'video' as const,
+      link: 'https://designportfolio1.my.canva.site/logo-animation'
     },
     { 
       id: 5, 
-      title: 'Digital Oasis & Solar Ecliptica', 
-      description: '"Digital Oasis" and "Solar Ecliptica" are part of a personal design series where I explored experimental album cover art, visual storytelling, and typographic expression outside of client constraints. The goal of this project was to push my creative boundaries, develop stronger artistic direction, and create visually striking covers that could exist within electronic, alternative, or conceptual music genres. Digital Oasis explores the idea of a "digital mirage" — a space where technology and human emotion blur, using heat-map inspired gradients, soft neon edges, and an abstract human form. Solar Ecliptica experiments with cosmic themes, dual silhouettes, and bold solar-inspired gradients. The angular futuristic type system reflects the intensity of space and eclipse imagery. Through this project, I developed two fully realized conceptual album identities, strengthened my skills in expressive typography, color theory, and abstract composition, and demonstrated versatility from minimal digital art to high-contrast cosmic visuals.',
-      mediaUrl: '/images/digitaloasis.jpeg',
+      title: 'Solar Ecliptica Branding System', 
+      description: 'A turntable setup sits on a deep red background alongside a full set of branded music-release assets. The layout includes black and white vinyl records, a CD, album covers, and printed inserts. Each item carries the same visual identity—bold red, orange, and black tones with abstract silhouette artwork and the title "SOLAR ECLIPTICA." The arrangement highlights consistency in branding, packaging design, and layout execution, showing the designer\'s ability to create a unified visual system across multiple physical and digital formats. This project demonstrates comprehensive brand application across vinyl, CD covers, and promotional layouts to simulate a real album launch.',
+      mediaUrl: ['/images/solar1.jpeg', '/images/solar2.jpeg', '/images/solar3.jpeg', '/images/solar4.jpeg'],
       mediaType: 'image' as const
     },
     { 
       id: 6, 
-      title: 'Solar Ecliptica Branding System', 
-      description: 'A turntable setup sits on a deep red background alongside a full set of branded music-release assets. The layout includes black and white vinyl records, a CD, album covers, and printed inserts. Each item carries the same visual identity—bold red, orange, and black tones with abstract silhouette artwork and the title "SOLAR ECLIPTICA." The arrangement highlights consistency in branding, packaging design, and layout execution, showing the designer\'s ability to create a unified visual system across multiple physical and digital formats. This project demonstrates comprehensive brand application across vinyl, CD covers, and promotional layouts to simulate a real album launch.',
-      mediaUrl: '/images/solar.jpeg',
-      mediaType: 'image' as const
-    },
-    { 
-      id: 7, 
       title: 'War & Peace Book Cover', 
       description: 'The design serves as a visually intense and thematic cover for Leo Tolstoy\'s War & Peace, utilizing strong symbolism and a dramatic color scheme to convey the epic scope of the novel. The use of deep maroons, rich reds, and dark browns sets an immediate mood of historical conflict, passion, and gravity. The golden shield and crossed swords are the clear focal point, directly representing the "War" component and the military aristocracy. The fiery phoenix symbolizes destruction and the potential for rebirth and change. The stark contrast between the white dove (Peace/Hope) and the subtle tank (Modern Warfare/Conflict) visually encapsulates the dual nature of the title. This project emphasizes symbolic visual language, integrating multiple well-known symbols to represent complex themes instantly, using historical palettes to establish a serious, classical tone, and creating visual depth through layered design where texture, symbols, and light effects give the flat cover depth and drama.',
       mediaUrl: '/images/book-cover.jpeg',
       mediaType: 'image' as const
     },
     { 
-      id: 8, 
+      id: 7, 
       title: 'War & Peace Mood Board', 
       description: 'A digital mood board with a black background, visually mapping the themes of the book War & Peace through various images, textures, and typography. Key visual themes include Peace/Aristocracy represented by historical images of 19th-century noble figures, and War/Conflict shown through Napoleonic-era cavalry, battlefield scenes, and gritty photos of soldiers. The board features powerful symbolism including a burning Phoenix rising from the bottom right (symbolizing renewal and transformation), a ripped Eagle head (representing empire and military strength), military medals, and Soviet-era war memorial statues. The duality is emphasized through contrasting typography: "WAR" appears dark and fragmented while "& PEACE" is rendered in gold/yellow against a dark, ruined landscape. This mood board demonstrates visual research and conceptualization skills, showing how imagery, color palettes, textures, and symbolic elements inform design decisions for thematic projects.',
       mediaUrl: '/images/moodboard.jpeg',
@@ -88,6 +85,24 @@ function App() {
   };
 
 
+
+  // Auto-play carousel for projects with multiple images
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProjectImageIndex(prev => {
+        const newIndex = { ...prev };
+        projects.forEach(project => {
+          if (Array.isArray(project.mediaUrl) && project.mediaUrl.length > 1) {
+            const currentIndex = prev[project.id] || 0;
+            newIndex[project.id] = (currentIndex + 1) % project.mediaUrl.length;
+          }
+        });
+        return newIndex;
+      });
+    }, 3000); // Change image every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [projects]);
 
   // Handle media loading errors
   const handleMediaError = (projectId: number) => {
@@ -238,25 +253,49 @@ function App() {
                       ) : (
                         <>
                           {project.mediaType === 'image' ? (
-                            <img 
-                              src={project.mediaUrl} 
-                              alt={`${project.title} - ${project.description}`}
-                              className="w-full h-full object-cover"
-                              loading="lazy"
-                              onError={() => handleMediaError(project.id)}
-                            />
+                            Array.isArray(project.mediaUrl) ? (
+                              <div className="relative w-full h-full">
+                                <img 
+                                  src={project.mediaUrl[projectImageIndex[project.id] || 0]} 
+                                  alt={`${project.title} - ${project.description}`}
+                                  className="w-full h-full object-cover"
+                                  loading="lazy"
+                                  onError={() => handleMediaError(project.id)}
+                                />
+                                {project.mediaUrl.length > 1 && (
+                                  <div className="absolute bottom-4 left-0 right-0 flex justify-center items-center gap-2 z-10">
+                                    <div className="flex gap-1 bg-black bg-opacity-50 px-3 py-2 rounded-full">
+                                      {project.mediaUrl.map((_, idx) => (
+                                        <div
+                                          key={idx}
+                                          className={`w-2 h-2 rounded-full transition-all ${
+                                            (projectImageIndex[project.id] || 0) === idx
+                                              ? 'bg-yellow-500 w-6'
+                                              : 'bg-gray-400'
+                                          }`}
+                                        />
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            ) : (
+                              <img 
+                                src={project.mediaUrl} 
+                                alt={`${project.title} - ${project.description}`}
+                                className="w-full h-full object-cover"
+                                loading="lazy"
+                                onError={() => handleMediaError(project.id)}
+                              />
+                            )
                           ) : (
                             <video 
-                              src={project.mediaUrl}
+                              src={typeof project.mediaUrl === 'string' ? project.mediaUrl : project.mediaUrl[0]}
                               className="w-full h-full object-cover"
+                              autoPlay
                               muted
                               loop
                               playsInline
-                              onMouseEnter={(e) => e.currentTarget.play()}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.pause();
-                                e.currentTarget.currentTime = 0;
-                              }}
                               onError={() => handleMediaError(project.id)}
                               aria-label={`Video preview for ${project.title}`}
                             />
@@ -367,9 +406,9 @@ function App() {
           </button>
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6 pt-8 border-t border-gray-700">
-            <a href="mailto:kamsiyochukwu.obi@email.com" className="flex items-center gap-3 text-gray-300 hover:text-yellow-500 transition-colors">
+            <a href="mailto:kamsiyochukwuobi1@gmail.com" className="flex items-center gap-3 text-gray-300 hover:text-yellow-500 transition-colors">
               <Mail size={24} />
-              <span className="text-lg">kamsiyochukwu.obi@email.com</span>
+              <span className="text-lg">kamsiyochukwuobi1@gmail.com</span>
             </a>
           </div>
         </div>
