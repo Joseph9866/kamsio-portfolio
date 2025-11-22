@@ -21,7 +21,7 @@ function App() {
       description: 'I created a fully responsive educational website dedicated to raising awareness about Ontario\'s endangered turtle species. This project started as a personal passion for wildlife protection and environmental design. The website was designed and developed entirely by me using HTML5, CSS3, semantic structuring, accessibility best practices, UX layout principles, and responsive design techniques, all coded from scratch. The site includes multiple thematic pages such as endangered species profiles, conservation solutions, research highlights, scientific data dashboards, lake/park ecosystem information, and a communication page with a functional contact form.',
       mediaUrl: '/images/ontario.png',
       mediaType: 'image' as const,
-      link: 'https://joseph9866.github.io/ontario-lake-tales/'
+      link: 'https://kamiieeobi553-create.github.io/ontario-turtles/'
     },
     { 
       id: 2, 
@@ -29,7 +29,7 @@ function App() {
       description: 'This project is a self-directed build where I recreated a PAC-MAN–inspired retro web interface using hand-coded HTML and CSS. The goal was to challenge myself to design a fully themed, multi-section website while maintaining strict visual fidelity to early arcade UI systems. No external libraries, page builders, or frameworks were used — everything is built from scratch. I implemented information architecture with logical sections (Header/Navigation, Landing Screen, High Scores Module, Gameplay Instructions, Character Index, Footer), recreated the arcade aesthetic through custom pixel-based typography, controlled color indexing, strict box-model usage, and CSS positioning. I curated and prepared each asset manually including cleaned and resized PNG sprites (Blinky, Pinky, Inky, Clyde), isolated Pac-Man movement frames, and applied responsive constraints. The final outcome demonstrates my ability to build structured pages using pure HTML/CSS, translate thematic design into functional UI components, work with custom assets and pixel-art rendering, and combine visual design principles with clean, modular code thinking.',
       mediaUrl: '/images/pac-man.mp4',
       mediaType: 'video' as const,
-      link: 'https://joseph9866.github.io/pac-man/'
+      link: 'https://kamiieeobi553-create.github.io/pacman/'
     },
     { 
       id: 3, 
@@ -37,7 +37,7 @@ function App() {
       description: 'A wide restaurant homepage layout centered on Japanese cuisine. The top shows a bold brand name, "OZIO AUTHENTIC SUSHI," with a navigation row offering menu, specials, locations, and contact. The hero area is a full-width banner featuring close-up sushi visuals with heavy garnish, paired with a heading promoting Japanese fusion cuisine and a subheading describing authentic, traditional dishes. A call-out button invites visitors to view seasonal specialties. Beneath the banner sits a three-column section. Each column displays a food category with a large image above its label. The left block shows a bowl of seasonal soup, the center displays sushi pieces being picked up with chopsticks, and the right features a bowl of udon noodles. The layout uses strong imagery, bold typography, and clean spacing to highlight featured dishes.',
       mediaUrl: '/images/Screenshot 2025-11-17 173525.png',
       mediaType: 'image' as const,
-      link: 'https://joseph9866.github.io/ozi-sushi/#'
+      link: 'https://kamiieeobi553-create.github.io/Ozi-sushi/'
     },
     { 
       id: 4, 
